@@ -191,10 +191,8 @@
       } else if (ext === 'txt') {
         text = await file.text();
       } else if (ext === 'docx') {
-        // Simple text extraction attempt
         const buf = await file.arrayBuffer();
         const str = new TextDecoder('utf-8').decode(buf);
-        // Extract text between XML tags roughly
         text = str.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
       }
     }
@@ -216,15 +214,11 @@
     let currentChars = [];
 
     for (const line of lines) {
-      // Check if line starts with a number (anime entry)
       const animeMatch = line.match(/^(?:\d+[.\)\s]+)(.+)$/);
-      // Check for bullet character
       const bulletMatch = line.match(/^[•\-\*]\s*(.+)$/);
-      // Check if line looks like comma-separated names (characters)
       const isCharLine = !line.match(/^\d+[.\)\s]/) && line.includes(',');
 
       if (animeMatch) {
-        // Save previous anime first
         if (currentAnime) {
           const id = await getNextId();
           const now = Date.now();
@@ -241,18 +235,14 @@
         currentAnime = animeMatch[1].trim();
         currentChars = [];
       } else if (bulletMatch && currentAnime) {
-        // Bullet point character
         currentChars.push(bulletMatch[1].trim());
       } else if (isCharLine && currentAnime) {
-        // Comma-separated characters on their own line
         const names = line.split(',').map(s => s.trim()).filter(Boolean);
         currentChars.push(...names);
       } else if (!line.match(/^\d+[.\)\s]/) && currentAnime) {
-        // Single character name on its own line (no comma, no bullet)
         currentChars.push(line);
       }
     }
-    // Save last anime
     if (currentAnime) {
       const id = await getNextId();
       const now = Date.now();
@@ -303,8 +293,13 @@
     return div.innerHTML;
   }
 
-  // Service Worker
+  // Service Worker Registration
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log('SW registered:', reg.scope))
+        .catch(err => console.error('SW registration failed:', err));
+    });
   }
 })();
+    
