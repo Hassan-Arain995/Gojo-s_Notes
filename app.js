@@ -2,7 +2,7 @@
   // State
   let allAnime = [];
   let filteredAnime = [];
-  let currentSort = 'newest';
+  let currentSort = 'oldest';
   let searchQuery = '';
 
   // DOM refs
