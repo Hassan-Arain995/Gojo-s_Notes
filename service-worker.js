@@ -1,22 +1,25 @@
 const CACHE_NAME = 'anime-notes-v1';
 const FILES_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/anime.html',
-  '/trash.html',
-  '/style.css',
-  '/db.js',
-  '/app.js',
-  '/anime.js',
-  '/trash.js',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png'
+  './',
+  'index.html',
+  'anime.html',
+  'trash.html',
+  'style.css',
+  'db.js',
+  'app.js',
+  'anime.js',
+  'trash.js',
+  'manifest.json',
+  'icon-192.png',
+  'icon-512.png'
 ];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(FILES_TO_CACHE))
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('Caching files...');
+      return cache.addAll(FILES_TO_CACHE);
+    }).catch(err => console.error('Cache failed:', err))
   );
   self.skipWaiting();
 });
@@ -34,9 +37,8 @@ self.addEventListener('fetch', (e) => {
   e.respondWith(
     caches.match(e.request).then((response) => {
       return response || fetch(e.request).catch(() => {
-        // Fallback for navigation requests
         if (e.request.mode === 'navigate') {
-          return caches.match('/index.html');
+          return caches.match('index.html');
         }
       });
     })
