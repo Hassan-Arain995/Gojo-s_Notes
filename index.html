@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#000000">
 <title>Anime Notes</title>
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css">
 <link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="app">
@@ -107,17 +107,7 @@
   </div>
 </div>
 
-<script>
-  // Register Service Worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(reg => console.log('SW registered:', reg.scope))
-        .catch(err => console.error('SW registration failed:', err));
-    });
-  }
-</script>
 <script src="db.js"></script>
 <script src="app.js"></script>
 </body>
-  </html>
+</html>
